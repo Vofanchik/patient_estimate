@@ -1,4 +1,5 @@
 import sys
+from PyQt5.QtCore import QTimer
 from PyQt5.QtWidgets import QApplication, QHBoxLayout, QAction, QFileDialog, QDialog, QTableWidgetItem, QMessageBox, \
     QCompleter
 
@@ -18,11 +19,10 @@ class mywindow(QtWidgets.QMainWindow):
 
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
-
-        # self.selected_patient_id = None
-
+        self.ui.tableWidget.setColumnHidden(6, True)
         self.ui.pushButton.clicked.connect(self.add_patient)
         self.ui.pushButton_3.clicked.connect(self.make_costs_for_patient)
+        self.ui.pushButton_2.clicked.connect(self.delete_patient)
         self.fill_table_patients()
 
         def add_menu():
@@ -50,16 +50,27 @@ class mywindow(QtWidgets.QMainWindow):
         np.show()
 
     def make_costs_for_patient(self):
+        pac.__init__()
         try:
             self.selected_patient_id = self.ui.tableWidget.item(self.ui.tableWidget.currentRow(), 6).text()
-            pac.__init__()
             pac.ui.label.setText(mw.ui.tableWidget.item(mw.ui.tableWidget.currentRow(), 0).text())
             pac.ui.label_2.setText(mw.ui.tableWidget.item(mw.ui.tableWidget.currentRow(), 1).text())
+            pac.fill_table_operations_of_patient()
+            pac.sum_of_operations()
             pac.show()
         except:
             QMessageBox().critical(self, 'Предупреждение', "Выберите пациента из таблицы или создайте нового",
                               QMessageBox().Ok)
 
+    def delete_patient(self):
+        try:
+            self.selected_patient_id = self.ui.tableWidget.item(self.ui.tableWidget.currentRow(), 6).text()
+            db.delete_patient(self.selected_patient_id)
+            db.delete_operations_of_patient(self.selected_patient_id)
+            self.fill_table_patients()
+        except:
+            QMessageBox().critical(self, 'Предупреждение', "Выберите пациента из таблицы или создайте нового",
+                              QMessageBox().Ok)
 
     def fill_table_patients(self):  # заполняет виджет таблицы пациентами из бд
         lst = db.show_patients()
@@ -107,26 +118,92 @@ class PatientAllCosts(QDialog):
         super().__init__(**kwargs)
         self.ui = Ui_PatientAllCosts()
         self.ui.setupUi(self)
+        self.ui.tableWidget.setColumnHidden(5, True)
         self.ui.pushButton.clicked.connect(self.open_add_position)
+        self.ui.pushButton_2.clicked.connect(self.delete_position)
+        try: self.fill_table_operations_of_patient(mw.selected_patient_id)
+        except: pass
+        self.sum_of_costs = 0.0
+
+
+    def sum_of_operations(self):
+        try:
+            self.sum_of_costs = 0.0
+            for i in db.show_operations_of_patient(mw.selected_patient_id):
+                self.sum_of_costs += i[4]
+            self.sum_of_costs = round(self.sum_of_costs, 2)
+            self.ui.label_4.setText(str(self.sum_of_costs))
+        except: pass
 
     def open_add_position(self):
         atp.__init__()
         atp.show()
+
+    def fill_table_operations_of_patient(self):  # заполняет виджет таблицы пациентами из бд
+        try:
+            lst = db.show_operations_of_patient(mw.selected_patient_id)
+            if lst == []:
+                self.ui.tableWidget.setRowCount(0)
+            else:
+                for co, it in enumerate(lst):
+                    self.ui.tableWidget.setRowCount(co + 1)
+                    self.ui.tableWidget.setItem(co, 0, QTableWidgetItem("{}".format(it[6])))
+                    self.ui.tableWidget.setItem(co, 1, QTableWidgetItem("{}".format(it[8])))
+                    self.ui.tableWidget.setItem(co, 2, QTableWidgetItem("{}".format(it[3])))
+                    self.ui.tableWidget.setItem(co, 3, QTableWidgetItem("{}".format(it[4])))
+                    self.ui.tableWidget.setItem(co, 4, QTableWidgetItem("{}".format(it[7])))
+                    self.ui.tableWidget.setItem(co, 5, QTableWidgetItem("{}".format(it[0])))
+        except:
+            pass
+
+    def delete_position(self):
+        try:
+            self.selected_id_position = self.ui.tableWidget.item(self.ui.tableWidget.currentRow(), 5).text()
+            print(self.selected_id_position)
+            db.delete_operations_by_id(self.selected_id_position)
+            pac.fill_table_operations_of_patient()
+            pac.sum_of_operations()
+            db.update_patient_sum(pac.sum_of_costs, mw.selected_patient_id)
+            mw.fill_table_patients()
+        except:
+            QMessageBox().critical(self, 'Предупреждение', "Выберите операцию для удаления из таблицы",
+                                   QMessageBox().Ok)
 
 class AddPositionToPatient(QDialog):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.ui = Ui_AddPositionToPatient()
         self.ui.setupUi(self)
+        self.ui.pushButton.clicked.connect(self.add_position_quantity_sum)
+        self.completer_items()
 
-    # def completer_items(self):
-    #     self.strList = [i[1] for i in db.show_data()]  # Создаём список слов
-    #     # Создаём QCompleter, в который устанавливаем список, а также указатель на родителя
-    #     completer = QCompleter(self.strList, self.ui.lineEdit)
-    #     completer.setCaseSensitivity(False)
-    #     completer.setFilterMode(QtCore.Qt.MatchContains)
-    #     completer.activated.connect(self.onActivated_competer)
-    #     self.ui.lineEdit.setCompleter(completer)
+    def completer_items(self):
+        self.strList_list = db.show_materials()
+        self.strList = [i[1] for i in self.strList_list]
+        self.completer = QCompleter(self.strList, self.ui.lineEdit)
+        self.completer.setCaseSensitivity(False)
+        self.completer.setFilterMode(QtCore.Qt.MatchContains)
+        self.completer.activated.connect(self.onActivated_competer)
+        self.ui.lineEdit.setCompleter(self.completer)
+
+    def onActivated_competer(self):
+        self.id_of_position = [n for n, x in enumerate(self.strList_list) if self.ui.lineEdit.text() in x][0]
+        self.ui.textEdit.setText(self.ui.lineEdit.text()+ ', ' +self.strList_list[self.id_of_position][3])
+        QTimer.singleShot(0, self.ui.lineEdit.clear)
+
+    def add_position_quantity_sum(self):
+        info_to_add = {'sum_of': round(self.ui.doubleSpinBox_2.value()/self.ui.doubleSpinBox.value()*self.strList_list[self.id_of_position][2], 2),
+                       'quantity': self.ui.doubleSpinBox_2.value()/self.ui.doubleSpinBox.value(),
+                       'id_materials': self.strList_list[self.id_of_position][0],
+                       'id_patients': mw.selected_patient_id}
+        db.add_position_cost(info_to_add['id_patients'], info_to_add['id_materials'], info_to_add['quantity'],
+                             info_to_add['sum_of'])
+        pac.fill_table_operations_of_patient()
+        pac.sum_of_operations()
+        db.update_patient_sum(pac.sum_of_costs, mw.selected_patient_id)
+        mw.fill_table_patients()
+        self.hide()
+
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
