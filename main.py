@@ -1,3 +1,5 @@
+from pprint import pprint
+
 import sys
 from PyQt5.QtCore import QTimer
 from PyQt5.QtWidgets import QApplication, QHBoxLayout, QAction, QFileDialog, QDialog, QTableWidgetItem, QMessageBox, \
@@ -6,6 +8,8 @@ from PyQt5.QtWidgets import QApplication, QHBoxLayout, QAction, QFileDialog, QDi
 from PyQt5 import QtWidgets, QtCore
 
 from DataBase import DataBase
+from ImportXlsx import ODTExport
+from UI_files.AddItem import Ui_AddItem
 from UI_files.AddPositionToPatient import Ui_AddPositionToPatient
 from UI_files.MainWindow import Ui_MainWindow
 from UI_files.NewPatient import Ui_NewPatient
@@ -30,6 +34,7 @@ class mywindow(QtWidgets.QMainWindow):
             bar = self.menuBar()
             menu = bar.addMenu("Действия")
             menu.addAction("Импортировать расходные материалы из .xlsx файла")
+            menu.addAction("Добавить расходную позицию")
             menu.triggered[QAction].connect(self.menu_bar_triggered)
             self.setLayout(layout)
         add_menu()
@@ -44,6 +49,10 @@ class mywindow(QtWidgets.QMainWindow):
                 ww.hide()
             except:
                 pass
+        elif press.text() == "Добавить расходную позицию":
+            ai.__init__()
+            ai.show()
+
 
     def add_patient(self):
         np.__init__()
@@ -93,6 +102,22 @@ class WaitingWindow(QDialog):
         self.ui = Ui_WaitingWidget()
         self.ui.setupUi(self)
 
+class AddItem(QDialog):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.ui = Ui_AddItem()
+        self.ui.setupUi(self)
+        self.ui.pushButton.clicked.connect(self.add_item)
+
+    def add_item(self):
+        inf_to_fill = {
+            'name': self.ui.lineEdit.text(),
+            'price': self.ui.doubleSpinBox.value(),
+            'unit': self.ui.lineEdit_2.text()
+        }
+        db.add_items(inf_to_fill['name'], inf_to_fill['price'], inf_to_fill['unit'])
+        self.hide()
+
 class NewPatient(QDialog):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -121,6 +146,7 @@ class PatientAllCosts(QDialog):
         self.ui.tableWidget.setColumnHidden(5, True)
         self.ui.pushButton.clicked.connect(self.open_add_position)
         self.ui.pushButton_2.clicked.connect(self.delete_position)
+        self.ui.pushButton_3.clicked.connect(self.export_to_odt)
         try: self.fill_table_operations_of_patient(mw.selected_patient_id)
         except: pass
         self.sum_of_costs = 0.0
@@ -169,6 +195,24 @@ class PatientAllCosts(QDialog):
             QMessageBox().critical(self, 'Предупреждение', "Выберите операцию для удаления из таблицы",
                                    QMessageBox().Ok)
 
+    def export_to_odt(self):
+        inf_to_fill = {
+            'patient_fio': mw.ui.tableWidget.item(mw.ui.tableWidget.currentRow(), 0).text(),
+            'story': mw.ui.tableWidget.item(mw.ui.tableWidget.currentRow(), 1).text(),
+            'from': mw.ui.tableWidget.item(mw.ui.tableWidget.currentRow(), 4).text(),
+            'to': mw.ui.tableWidget.item(mw.ui.tableWidget.currentRow(), 5).text(),
+            'status': mw.ui.tableWidget.item(mw.ui.tableWidget.currentRow(), 2).text(),
+            'total_sum': mw.ui.tableWidget.item(mw.ui.tableWidget.currentRow(), 3).text(),
+            'positions': db.show_operations_of_patient(mw.ui.tableWidget.item(mw.ui.tableWidget.currentRow(), 6).text(),)
+        }
+        pprint(inf_to_fill)
+        fname = QFileDialog.getSaveFileName(self, 'Save file',
+                                            '', "Open Office Document text files (*.odt)")
+
+        odt.form_odt(file_name=fname[0], **inf_to_fill)
+        # ODTExport.form_odt(file_name=fname[0], **inf_to_fill)
+        # pprint(inf_to_fill)
+
 class AddPositionToPatient(QDialog):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -213,6 +257,8 @@ if __name__ == "__main__":
     np = NewPatient()
     pac = PatientAllCosts()
     atp = AddPositionToPatient()
+    ai = AddItem()
+    odt = ODTExport()
     mw.show()
 
     sys.exit(app.exec_())

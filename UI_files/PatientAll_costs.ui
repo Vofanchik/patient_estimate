@@ -19,7 +19,7 @@
    <string>Расходы на пациента</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="3" column="0">
+   <item row="4" column="0">
     <widget class="QPushButton" name="pushButton">
      <property name="font">
       <font>
@@ -31,7 +31,7 @@
      </property>
     </widget>
    </item>
-   <item row="0" column="4" rowspan="2">
+   <item row="0" column="5" rowspan="2">
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_2">
@@ -72,7 +72,7 @@
      </property>
     </widget>
    </item>
-   <item row="3" column="4">
+   <item row="4" column="5">
     <widget class="QPushButton" name="pushButton_2">
      <property name="font">
       <font>
@@ -97,33 +97,7 @@
      </property>
     </widget>
    </item>
-   <item row="3" column="2">
-    <widget class="QLabel" name="label_4">
-     <property name="font">
-      <font>
-       <family>MS Shell Dlg 2</family>
-       <pointsize>13</pointsize>
-       <italic>false</italic>
-      </font>
-     </property>
-     <property name="text">
-      <string>0</string>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="1">
-    <widget class="QLabel" name="label_3">
-     <property name="font">
-      <font>
-       <family>MS Shell Dlg 2</family>
-      </font>
-     </property>
-     <property name="text">
-      <string>Итого на пациента</string>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="0" colspan="5">
+   <item row="2" column="0" colspan="6">
     <widget class="QTableWidget" name="tableWidget">
      <property name="font">
       <font>
@@ -178,6 +152,53 @@
        <string>ID</string>
       </property>
      </column>
+    </widget>
+   </item>
+   <item row="4" column="2">
+    <widget class="QLabel" name="label_4">
+     <property name="font">
+      <font>
+       <family>MS Shell Dlg 2</family>
+       <pointsize>13</pointsize>
+       <italic>false</italic>
+      </font>
+     </property>
+     <property name="text">
+      <string>0</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="1">
+    <widget class="QLabel" name="label_3">
+     <property name="font">
+      <font>
+       <family>MS Shell Dlg 2</family>
+      </font>
+     </property>
+     <property name="text">
+      <string>Итого на пациента</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="3">
+    <widget class="QComboBox" name="comboBox">
+     <item>
+      <property name="text">
+       <string>Word</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>OpenOffice</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="4" column="4">
+    <widget class="QPushButton" name="pushButton_3">
+     <property name="text">
+      <string>Экспорт</string>
+     </property>
     </widget>
    </item>
   </layout>
