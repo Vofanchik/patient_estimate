@@ -132,7 +132,7 @@ class NewPatient(QDialog):
                         'date_end_illness': self.ui.dateEdit_2.text(),
                         'cost': 0.0,
                         'status': self.ui.comboBox.currentText()}
-        print(patient_info)
+
         db.add_patient(patient_info['story'], patient_info['fio'], patient_info['date_start_illness'],
                        patient_info['date_end_illness'], patient_info['cost'], patient_info['status'])
         mw.fill_table_patients()
