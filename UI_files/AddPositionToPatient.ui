@@ -14,15 +14,8 @@
    <string>Добавить позицию расхода на пациента</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="2" column="1">
-    <widget class="QLabel" name="label_2">
-     <property name="text">
-      <string>Затрачено едениц</string>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="1">
-    <widget class="QDoubleSpinBox" name="doubleSpinBox_2">
+   <item row="4" column="0">
+    <widget class="QDoubleSpinBox" name="doubleSpinBox">
      <property name="decimals">
       <number>4</number>
      </property>
@@ -31,6 +24,25 @@
      </property>
      <property name="value">
       <double>1.000000000000000</double>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0" colspan="2">
+    <widget class="QTextEdit" name="textEdit">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>15</pointsize>
+      </font>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="0" colspan="2">
+    <widget class="QPushButton" name="pushButton">
+     <property name="text">
+      <string>Добавить</string>
      </property>
     </widget>
    </item>
@@ -55,8 +67,8 @@
      </property>
     </widget>
    </item>
-   <item row="3" column="0">
-    <widget class="QDoubleSpinBox" name="doubleSpinBox">
+   <item row="4" column="1">
+    <widget class="QDoubleSpinBox" name="doubleSpinBox_2">
      <property name="decimals">
       <number>4</number>
      </property>
@@ -68,30 +80,40 @@
      </property>
     </widget>
    </item>
-   <item row="1" column="0" colspan="2">
-    <widget class="QTextEdit" name="textEdit">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>15</pointsize>
-      </font>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="0">
+   <item row="3" column="0">
     <widget class="QLabel" name="label">
      <property name="text">
       <string>Количество едениц в упаковке</string>
      </property>
     </widget>
    </item>
-   <item row="4" column="0" colspan="2">
-    <widget class="QPushButton" name="pushButton">
+   <item row="3" column="1">
+    <widget class="QLabel" name="label_2">
      <property name="text">
-      <string>Добавить</string>
+      <string>Затрачено едениц</string>
      </property>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <widget class="QComboBox" name="comboBox">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <item>
+      <property name="text">
+       <string>Расходные материалы</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Лекарственные препараты</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Дезинфицирующие средства</string>
+      </property>
+     </item>
     </widget>
    </item>
   </layout>

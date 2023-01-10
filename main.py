@@ -143,7 +143,7 @@ class PatientAllCosts(QDialog):
         super().__init__(**kwargs)
         self.ui = Ui_PatientAllCosts()
         self.ui.setupUi(self)
-        self.ui.tableWidget.setColumnHidden(5, True)
+        self.ui.tableWidget.setColumnHidden(6, True)
         self.ui.pushButton.clicked.connect(self.open_add_position)
         self.ui.pushButton_2.clicked.connect(self.delete_position)
         self.ui.pushButton_3.clicked.connect(self.export_to_odt)
@@ -178,7 +178,7 @@ class PatientAllCosts(QDialog):
                     self.ui.tableWidget.setItem(co, 2, QTableWidgetItem("{}".format(it[3])))
                     self.ui.tableWidget.setItem(co, 3, QTableWidgetItem("{}".format(it[4])))
                     self.ui.tableWidget.setItem(co, 4, QTableWidgetItem("{}".format(it[7])))
-                    self.ui.tableWidget.setItem(co, 5, QTableWidgetItem("{}".format(it[0])))
+                    self.ui.tableWidget.setItem(co, 5, QTableWidgetItem("{}".format(it[9])))
         except:
             pass
 
@@ -205,7 +205,7 @@ class PatientAllCosts(QDialog):
             'total_sum': mw.ui.tableWidget.item(mw.ui.tableWidget.currentRow(), 3).text(),
             'positions': db.show_operations_of_patient(mw.ui.tableWidget.item(mw.ui.tableWidget.currentRow(), 6).text(),)
         }
-        pprint(inf_to_fill)
+
         fname = QFileDialog.getSaveFileName(self, 'Save file',
                                             '', "Open Office Document text files (*.odt)")
 
@@ -220,10 +220,16 @@ class AddPositionToPatient(QDialog):
         self.ui.setupUi(self)
         self.ui.pushButton.clicked.connect(self.add_position_quantity_sum)
         self.completer_items()
+        self.ui.comboBox.currentIndexChanged.connect(self.index_category_changed)
+
+    def index_category_changed(self):
+        print(self.ui.comboBox.currentIndex())
+        #TODO добавить в класс ДБ изменение категории и слот
 
     def completer_items(self):
         self.strList_list = db.show_materials()
         self.strList = [i[1] for i in self.strList_list]
+
         self.completer = QCompleter(self.strList, self.ui.lineEdit)
         self.completer.setCaseSensitivity(False)
         self.completer.setFilterMode(QtCore.Qt.MatchContains)
@@ -234,6 +240,9 @@ class AddPositionToPatient(QDialog):
         self.id_of_position = [n for n, x in enumerate(self.strList_list) if self.ui.lineEdit.text() in x][0]
         self.ui.textEdit.setText(self.ui.lineEdit.text()+ ', ' +self.strList_list[self.id_of_position][3])
         QTimer.singleShot(0, self.ui.lineEdit.clear)
+        self.ui.comboBox.setCurrentIndex(self.strList_list[self.id_of_position][4])
+        self.ui.comboBox.setEnabled(True)
+
 
     def add_position_quantity_sum(self):
         info_to_add = {'sum_of': round(self.ui.doubleSpinBox_2.value()/self.ui.doubleSpinBox.value()*self.strList_list[self.id_of_position][2], 2),
