@@ -164,6 +164,7 @@ class DataBase:
         self.cur.execute("UPDATE patients SET cost = {} where id = {}".format(cost, _id))
         self.conn.commit()
 
+
     def show_materials_by_quantity(self):
         return self.cur.execute('''SELECT * FROM operations
                                 LEFT JOIN materials ON operations.id_materials = materials.id''').fetchall()
@@ -179,10 +180,14 @@ class DataBase:
 
         return _all
 
+    def update_category_of_materials(self, id_material, new_category):
+        self.cur.execute("UPDATE materials SET category = {} where id = {}".format(new_category, id_material))
+        self.conn.commit()
+        return new_category
 
 if __name__ == "__main__":
     db = DataBase()
-    print(db.show_patients())
+    print(db.show_materials())
     # data = db.show_quantity_of_materials()
     # pprint(data)
     # db.form_odt_for_sum_of(data)

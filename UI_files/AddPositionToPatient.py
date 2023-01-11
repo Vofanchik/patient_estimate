@@ -63,6 +63,7 @@ class Ui_AddPositionToPatient(object):
         self.comboBox.addItem("")
         self.comboBox.addItem("")
         self.comboBox.addItem("")
+        self.comboBox.addItem("")
         self.gridLayout.addWidget(self.comboBox, 1, 1, 1, 1)
 
         self.retranslateUi(AddPositionToPatient)
@@ -77,6 +78,7 @@ class Ui_AddPositionToPatient(object):
         self.comboBox.setItemText(0, _translate("AddPositionToPatient", "Расходные материалы"))
         self.comboBox.setItemText(1, _translate("AddPositionToPatient", "Лекарственные препараты"))
         self.comboBox.setItemText(2, _translate("AddPositionToPatient", "Дезинфицирующие средства"))
+        self.comboBox.setItemText(3, _translate("AddPositionToPatient", "Иное"))
 
 
 if __name__ == "__main__":

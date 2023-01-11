@@ -216,15 +216,20 @@ class PatientAllCosts(QDialog):
 class AddPositionToPatient(QDialog):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        self.id_of_position = None
         self.ui = Ui_AddPositionToPatient()
         self.ui.setupUi(self)
         self.ui.pushButton.clicked.connect(self.add_position_quantity_sum)
         self.completer_items()
         self.ui.comboBox.currentIndexChanged.connect(self.index_category_changed)
 
+
     def index_category_changed(self):
-        print(self.ui.comboBox.currentIndex())
-        #TODO добавить в класс ДБ изменение категории и слот
+        # id_of_position = self.id_of_position
+        # currentIndex = self.ui.comboBox.currentIndex()
+        # print(id_of_position, currentIndex)
+        db.update_category_of_materials(self.id_of_position, self.ui.comboBox.currentIndex())
+        # db.update_category_of_materials(1,0)
 
     def completer_items(self):
         self.strList_list = db.show_materials()
@@ -237,7 +242,9 @@ class AddPositionToPatient(QDialog):
         self.ui.lineEdit.setCompleter(self.completer)
 
     def onActivated_competer(self):
-        self.id_of_position = [n for n, x in enumerate(self.strList_list) if self.ui.lineEdit.text() in x][0]
+        self.id_of_position = list(filter(lambda x: x[1] == self.ui.lineEdit.text(), self.strList_list))[0][0]
+        # self.id_of_position = [n for n, x in enumerate(self.strList_list) if self.ui.lineEdit.text() in x][0] #
+        # неправильно!!!
         self.ui.textEdit.setText(self.ui.lineEdit.text()+ ', ' +self.strList_list[self.id_of_position][3])
         QTimer.singleShot(0, self.ui.lineEdit.clear)
         self.ui.comboBox.setCurrentIndex(self.strList_list[self.id_of_position][4])
@@ -247,7 +254,7 @@ class AddPositionToPatient(QDialog):
     def add_position_quantity_sum(self):
         info_to_add = {'sum_of': round(self.ui.doubleSpinBox_2.value()/self.ui.doubleSpinBox.value()*self.strList_list[self.id_of_position][2], 2),
                        'quantity': self.ui.doubleSpinBox_2.value()/self.ui.doubleSpinBox.value(),
-                       'id_materials': self.strList_list[self.id_of_position][0],
+                       'id_materials': self.id_of_position,
                        'id_patients': mw.selected_patient_id}
         db.add_position_cost(info_to_add['id_patients'], info_to_add['id_materials'], info_to_add['quantity'],
                              info_to_add['sum_of'])
