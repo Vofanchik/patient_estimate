@@ -143,6 +143,9 @@ class DataBase:
     def show_materials(self):
         return self.cur.execute('''SELECT * FROM materials''').fetchall()
 
+    def show_material_by_id(self, id_material):
+        return self.cur.execute('''SELECT * FROM materials where id = {}'''.format(id_material)).fetchone()
+
     def delete_patient(self, id_patient: int):
         self.cur.execute('DELETE from patients where id = {}'.format(id_patient))
         self.conn.commit()
@@ -187,7 +190,7 @@ class DataBase:
 
 if __name__ == "__main__":
     db = DataBase()
-    print(db.show_materials())
+    print(db.show_material_by_id(1))
     # data = db.show_quantity_of_materials()
     # pprint(data)
     # db.form_odt_for_sum_of(data)

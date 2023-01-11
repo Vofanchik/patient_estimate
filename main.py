@@ -179,13 +179,13 @@ class PatientAllCosts(QDialog):
                     self.ui.tableWidget.setItem(co, 3, QTableWidgetItem("{}".format(it[4])))
                     self.ui.tableWidget.setItem(co, 4, QTableWidgetItem("{}".format(it[7])))
                     self.ui.tableWidget.setItem(co, 5, QTableWidgetItem("{}".format(it[9])))
+                    self.ui.tableWidget.setItem(co, 6, QTableWidgetItem("{}".format(it[0])))
         except:
             pass
 
     def delete_position(self):
         try:
-            self.selected_id_position = self.ui.tableWidget.item(self.ui.tableWidget.currentRow(), 5).text()
-            print(self.selected_id_position)
+            self.selected_id_position = self.ui.tableWidget.item(self.ui.tableWidget.currentRow(), 6).text()
             db.delete_operations_by_id(self.selected_id_position)
             pac.fill_table_operations_of_patient()
             pac.sum_of_operations()
@@ -225,11 +225,8 @@ class AddPositionToPatient(QDialog):
 
 
     def index_category_changed(self):
-        # id_of_position = self.id_of_position
-        # currentIndex = self.ui.comboBox.currentIndex()
-        # print(id_of_position, currentIndex)
         db.update_category_of_materials(self.id_of_position, self.ui.comboBox.currentIndex())
-        # db.update_category_of_materials(1,0)
+
 
     def completer_items(self):
         self.strList_list = db.show_materials()
@@ -245,14 +242,15 @@ class AddPositionToPatient(QDialog):
         self.id_of_position = list(filter(lambda x: x[1] == self.ui.lineEdit.text(), self.strList_list))[0][0]
         # self.id_of_position = [n for n, x in enumerate(self.strList_list) if self.ui.lineEdit.text() in x][0] #
         # неправильно!!!
-        self.ui.textEdit.setText(self.ui.lineEdit.text()+ ', ' +self.strList_list[self.id_of_position][3])
+        self.ui.textEdit.setText(self.ui.lineEdit.text()+ ', ' +db.show_material_by_id(self.id_of_position)[3])
         QTimer.singleShot(0, self.ui.lineEdit.clear)
-        self.ui.comboBox.setCurrentIndex(self.strList_list[self.id_of_position][4])
+        self.ui.comboBox.setCurrentIndex(db.show_material_by_id(self.id_of_position)[4])
         self.ui.comboBox.setEnabled(True)
 
 
     def add_position_quantity_sum(self):
-        info_to_add = {'sum_of': round(self.ui.doubleSpinBox_2.value()/self.ui.doubleSpinBox.value()*self.strList_list[self.id_of_position][2], 2),
+        info_to_add = {'sum_of': round(self.ui.doubleSpinBox_2.value()/self.ui.doubleSpinBox.value()*db.
+                                       show_material_by_id(self.id_of_position)[2], 2),
                        'quantity': self.ui.doubleSpinBox_2.value()/self.ui.doubleSpinBox.value(),
                        'id_materials': self.id_of_position,
                        'id_patients': mw.selected_patient_id}
@@ -263,6 +261,7 @@ class AddPositionToPatient(QDialog):
         db.update_patient_sum(pac.sum_of_costs, mw.selected_patient_id)
         mw.fill_table_patients()
         self.hide()
+        self.__init__()
 
 
 if __name__ == "__main__":
