@@ -112,8 +112,8 @@ class DataBase:
         # cur.execute('''alter table materials add column category integer default 1''')
         # cur.execute('''alter table materials drop column category''')
 
-    def add_items(self, name, price, unit):  # создаем расходник
-        self.cur.execute("INSERT INTO materials(name, price, unit) VALUES(?,?,?)", (name, price, unit,))
+    def add_items(self, name, price, unit, category):  # создаем расходник
+        self.cur.execute("INSERT INTO materials(name, price, unit, category) VALUES(?,?,?,?)", (name, price, unit, category,))
         self.conn.commit()
         return self.cur.lastrowid
 

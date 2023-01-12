@@ -113,9 +113,10 @@ class AddItem(QDialog):
         inf_to_fill = {
             'name': self.ui.lineEdit.text(),
             'price': self.ui.doubleSpinBox.value(),
-            'unit': self.ui.lineEdit_2.text()
+            'unit': self.ui.lineEdit_2.text(),
+            'category': self.ui.comboBox.currentIndex()
         }
-        db.add_items(inf_to_fill['name'], inf_to_fill['price'], inf_to_fill['unit'])
+        db.add_items(inf_to_fill['name'], inf_to_fill['price'], inf_to_fill['unit'], inf_to_fill['category'])
         self.hide()
 
 class NewPatient(QDialog):

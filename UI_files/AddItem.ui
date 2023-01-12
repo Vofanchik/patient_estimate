@@ -14,46 +14,20 @@
    <string>Добавить расходную позицию</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="0" column="0">
-    <widget class="QLabel" name="label">
+   <item row="8" column="1" colspan="2">
+    <widget class="QPushButton" name="pushButton">
      <property name="font">
       <font>
+       <family>MS Shell Dlg 2</family>
        <pointsize>14</pointsize>
       </font>
      </property>
      <property name="text">
-      <string>Наименование</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
+      <string>Добавить</string>
      </property>
     </widget>
    </item>
-   <item row="2" column="0">
-    <widget class="QLabel" name="label_2">
-     <property name="font">
-      <font>
-       <pointsize>14</pointsize>
-      </font>
-     </property>
-     <property name="text">
-      <string>Еденица измерения</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="0">
-    <widget class="QLineEdit" name="lineEdit_2">
-     <property name="font">
-      <font>
-       <pointsize>14</pointsize>
-      </font>
-     </property>
-    </widget>
-   </item>
-   <item row="5" column="0">
+   <item row="5" column="1" colspan="2">
     <widget class="QDoubleSpinBox" name="doubleSpinBox">
      <property name="font">
       <font>
@@ -68,7 +42,22 @@
      </property>
     </widget>
    </item>
-   <item row="4" column="0">
+   <item row="2" column="1" colspan="2">
+    <widget class="QLabel" name="label_2">
+     <property name="font">
+      <font>
+       <pointsize>14</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Еденица измерения</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="1" colspan="2">
     <widget class="QLabel" name="label_3">
      <property name="font">
       <font>
@@ -83,7 +72,22 @@
      </property>
     </widget>
    </item>
-   <item row="1" column="0">
+   <item row="0" column="1" colspan="2">
+    <widget class="QLabel" name="label">
+     <property name="font">
+      <font>
+       <pointsize>14</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Наименование</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1" colspan="2">
     <widget class="QLineEdit" name="lineEdit">
      <property name="font">
       <font>
@@ -92,17 +96,88 @@
      </property>
     </widget>
    </item>
-   <item row="6" column="0">
-    <widget class="QPushButton" name="pushButton">
+   <item row="3" column="1" colspan="2">
+    <widget class="QLineEdit" name="lineEdit_2">
      <property name="font">
       <font>
-       <family>MS Shell Dlg 2</family>
+       <pointsize>14</pointsize>
+      </font>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="1" colspan="2">
+    <widget class="QLabel" name="label_4">
+     <property name="font">
+      <font>
        <pointsize>14</pointsize>
       </font>
      </property>
      <property name="text">
-      <string>Добавить</string>
+      <string>Категория</string>
      </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="1" colspan="2">
+    <widget class="QComboBox" name="comboBox">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="font">
+      <font>
+       <family>Modern No. 20</family>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
+     <property name="cursor">
+      <cursorShape>ArrowCursor</cursorShape>
+     </property>
+     <property name="focusPolicy">
+      <enum>Qt::WheelFocus</enum>
+     </property>
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
+     <property name="maxVisibleItems">
+      <number>10</number>
+     </property>
+     <property name="insertPolicy">
+      <enum>QComboBox::InsertAtCurrent</enum>
+     </property>
+     <property name="sizeAdjustPolicy">
+      <enum>QComboBox::AdjustToContents</enum>
+     </property>
+     <property name="duplicatesEnabled">
+      <bool>false</bool>
+     </property>
+     <property name="frame">
+      <bool>true</bool>
+     </property>
+     <property name="modelColumn">
+      <number>0</number>
+     </property>
+     <item>
+      <property name="text">
+       <string>Расходные материалы</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Лекарственные препараты</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Дезинфицирующие средства</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Иное</string>
+      </property>
+     </item>
     </widget>
    </item>
   </layout>
