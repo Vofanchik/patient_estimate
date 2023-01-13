@@ -94,27 +94,46 @@ class DataBase:
 
         self.cur.execute(  # Все что израсходовано
             '''CREATE TABLE IF NOT EXISTS operations(
-           id integer primary key,
-           id_patients integer,
-           id_materials integer,
-           quantity real NOT NULL,
-           sum_of real,
-           FOREIGN KEY (id_patients)
-           REFERENCES patients (id) 
-           ON UPDATE CASCADE
-           ON DELETE CASCADE,
-           FOREIGN KEY (id_materials)
-           REFERENCES materials (id) 
-           ON UPDATE CASCADE
-           ON DELETE CASCADE)''')
+                       id integer primary key,
+                       id_patients integer,
+                       id_materials integer,
+                       quantity real NOT NULL,
+                       sum_of real,
+                       FOREIGN KEY (id_patients)
+                       REFERENCES patients (id) 
+                       ON UPDATE CASCADE
+                       ON DELETE CASCADE,
+                       FOREIGN KEY (id_materials)
+                       REFERENCES materials (id) 
+                       ON UPDATE CASCADE
+                       ON DELETE CASCADE)''')
         self.conn.commit()
 
+        self.cur.execute( # сложный материал
+            '''CREATE TABLE IF NOT EXISTS materials_complex(
+                       id integer primary key,                       
+                       id_materials integer,
+                       id_materials_new integer,   
+                       quantity real default 1,                    
+                       FOREIGN KEY (id_materials)
+                       REFERENCES materials (id) 
+                       ON UPDATE CASCADE
+                       ON DELETE CASCADE,
+                       FOREIGN KEY (id_materials_new)
+                       REFERENCES materials (id) 
+                       ON UPDATE CASCADE
+                       ON DELETE CASCADE)'''
+        )
+
+        # conn = sqlite3.connect('patients.db')
+        # cur = conn.cursor()
         # cur.execute('''alter table materials add column category integer default 1''')
         # cur.execute('''alter table materials drop column category''')
 
     def add_items(self, name, price, unit, category):  # создаем расходник
         self.cur.execute("INSERT INTO materials(name, price, unit, category) VALUES(?,?,?,?)", (name, price, unit, category,))
         self.conn.commit()
+
         return self.cur.lastrowid
 
     def add_patient(self, story, fio, date_start_illness, date_end_illness, cost, status):  # создаем пациента
@@ -130,6 +149,19 @@ class DataBase:
         self.conn.commit()
         return self.cur.lastrowid
 
+    def add_complex_material_bind(self, id_materials, id_materials_new, quantity):
+        self.cur.execute("INSERT INTO materials_complex(id_materials, id_materials_new, quantity) VALUES(?,?,?)",
+                         (id_materials, id_materials_new, quantity,))
+        self.conn.commit()
+
+    def update_complex_material_sum(self, id_complex_material):
+        new_cost = self.cur.execute('''SELECT sum(quantity*price) FROM materials_complex
+                     left JOIN materials ON materials_complex.id_materials = materials.id
+                     WHERE id_materials_new = {}'''.format(id_complex_material)).fetchone()[0]
+        self.cur.execute("UPDATE materials SET price = {} where id = {}".format(new_cost, id_complex_material))
+        self.conn.commit()
+
+
     # def import_from_xls(self, file_name):  # импортируем из экселя
     #     p = XlsxImport()
     #     data = p.import_into_list(file_name)
@@ -142,6 +174,9 @@ class DataBase:
 
     def show_materials(self):
         return self.cur.execute('''SELECT * FROM materials''').fetchall()
+
+    def show_materials_names(self):
+        return self.cur.execute('''SELECT name FROM materials''').fetchall()
 
     def show_material_by_id(self, id_material):
         return self.cur.execute('''SELECT * FROM materials where id = {}'''.format(id_material)).fetchone()
@@ -167,7 +202,6 @@ class DataBase:
         self.cur.execute("UPDATE patients SET cost = {} where id = {}".format(cost, _id))
         self.conn.commit()
 
-
     def show_materials_by_quantity(self):
         return self.cur.execute('''SELECT * FROM operations
                                 LEFT JOIN materials ON operations.id_materials = materials.id''').fetchall()
@@ -190,7 +224,7 @@ class DataBase:
 
 if __name__ == "__main__":
     db = DataBase()
-    print(db.show_material_by_id(1))
+    db.update_complex_material_sum(1570)
     # data = db.show_quantity_of_materials()
     # pprint(data)
     # db.form_odt_for_sum_of(data)
