@@ -17,7 +17,7 @@ from UI_files.PatientAll_costs import Ui_PatientAllCosts
 from UI_files.WaitingWindow import Ui_WaitingWidget
 from UI_files.AddComplexPosition import Ui_AddComplexMaterial
 from UI_files.AddItemtoComplexMaterial import Ui_AddItemToComplexMaterial
-
+from qt_material import apply_stylesheet
 
 class AddItemToComplexMaterial(QDialog):
     def __init__(self, **kwargs):
@@ -394,6 +394,12 @@ class AddPositionToPatient(QDialog):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
+    extra = {
+
+        # Density Scale
+        'density_scale': '-1',
+    }
+    apply_stylesheet(app, theme='light_red.xml', invert_secondary=True, extra=extra)
     ww = WaitingWindow()
     db = DataBase()
     mw = mywindow()
