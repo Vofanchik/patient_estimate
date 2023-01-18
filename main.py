@@ -1,9 +1,6 @@
-from pprint import pprint
-
 import sys
 from PyQt5.QtCore import QTimer
-from PyQt5.QtWidgets import QApplication, QHBoxLayout, QAction, QFileDialog, QDialog, QTableWidgetItem, QMessageBox, \
-    QCompleter
+from PyQt5.QtWidgets import QApplication, QHBoxLayout, QFileDialog, QDialog, QTableWidgetItem, QMessageBox, QCompleter
 
 from PyQt5 import QtWidgets, QtCore
 
@@ -42,21 +39,27 @@ class AddItemToComplexMaterial(QDialog):
         self.ui.textEdit.setText(self.ui.lineEdit.text() + ', ' + db.show_material_by_id(self.id_of_position)[3])
         QTimer.singleShot(0, self.ui.lineEdit.clear)
 
+    def update_sum(self):
+        try:summa = round(db.show_sum_binded_complex_item(acm.new_material_id)[0],2)
+        except: summa = 0
+        acm.ui.label_2.setText(str(summa))
+        db.update_complex_material_sum(summa, acm.new_material_id)
+
     def add_item(self):
-        pass
-    #     info_to_add = {'sum_of': round(self.ui.doubleSpinBox_2.value()/self.ui.doubleSpinBox.value()*db.
-    #                                    show_material_by_id(self.id_of_position)[2], 2),
-    #                    'quantity': self.ui.doubleSpinBox_2.value()/self.ui.doubleSpinBox.value(),
-    #                    'id_materials': self.id_of_position,
-    #                    'id_patients': mw.selected_patient_id}
-    #     db.add_position_cost(info_to_add['id_patients'], info_to_add['id_materials'], info_to_add['quantity'],
-    #                          info_to_add['sum_of'])
-    #     pac.fill_table_operations_of_patient()
-    #     pac.sum_of_operations()
-    #     db.update_patient_sum(pac.sum_of_costs, mw.selected_patient_id)
-    #     mw.fill_table_patients()
-    #     self.hide()
-    #     self.__init__()
+
+        info_to_add = {'quantity': round(self.ui.doubleSpinBox_2.value()/self.ui.doubleSpinBox.value(), 2),
+                       'id_materials': self.id_of_position,
+                       'id_materials_new': acm.new_material_id}
+        db.add_complex_material_bind(info_to_add['id_materials'], info_to_add['id_materials_new'],
+                                     info_to_add['quantity'])
+        # pac.fill_table_operations_of_patient()
+        # pac.sum_of_operations()
+        # db.update_patient_sum(pac.sum_of_costs, mw.selected_patient_id)
+        # mw.fill_table_patients()
+        acm.fill_table_items_of_complex_material()
+        self.update_sum()
+        self.hide()
+        self.__init__()
 
 
 class AddComplexMaterial(QDialog):
@@ -69,7 +72,7 @@ class AddComplexMaterial(QDialog):
         self.sum_of_costs = 0.0
         self.ui.pushButton.clicked.connect(self.open_add_position)
         self.ui.pushButton_3.clicked.connect(self.add_new_material_to_db)
-
+        self.ui.pushButton_2.clicked.connect(self.delete_position)
         self.names_all_materials = [a[0] for a in db.show_materials_names()]
 
     def add_new_material_to_db(self):
@@ -98,40 +101,43 @@ class AddComplexMaterial(QDialog):
     #         self.sum_of_costs = round(self.sum_of_costs, 2)
     #         self.ui.label_4.setText(str(self.sum_of_costs))
     #     except: pass
-    #
+
     def open_add_position(self):
         aitcm.__init__()
         aitcm.show()
-    #
-    # def fill_table_operations_of_patient(self):  # заполняет виджет таблицы пациентами из бд
-    #     try:
-    #         lst = db.show_operations_of_patient(mw.selected_patient_id)
-    #         if lst == []:
-    #             self.ui.tableWidget.setRowCount(0)
-    #         else:
-    #             for co, it in enumerate(lst):
-    #                 self.ui.tableWidget.setRowCount(co + 1)
-    #                 self.ui.tableWidget.setItem(co, 0, QTableWidgetItem("{}".format(it[6])))
-    #                 self.ui.tableWidget.setItem(co, 1, QTableWidgetItem("{}".format(it[8])))
-    #                 self.ui.tableWidget.setItem(co, 2, QTableWidgetItem("{}".format(it[3])))
-    #                 self.ui.tableWidget.setItem(co, 3, QTableWidgetItem("{}".format(it[4])))
-    #                 self.ui.tableWidget.setItem(co, 4, QTableWidgetItem("{}".format(it[7])))
-    #                 self.ui.tableWidget.setItem(co, 5, QTableWidgetItem("{}".format(it[9])))
-    #                 self.ui.tableWidget.setItem(co, 6, QTableWidgetItem("{}".format(it[0])))
-    #     except:
-    #         pass
-    #
-    # def delete_position(self):
-    #     try:
-    #         self.selected_id_position = self.ui.tableWidget.item(self.ui.tableWidget.currentRow(), 6).text()
-    #         db.delete_operations_by_id(self.selected_id_position)
-    #         pac.fill_table_operations_of_patient()
-    #         pac.sum_of_operations()
-    #         db.update_patient_sum(pac.sum_of_costs, mw.selected_patient_id)
-    #         mw.fill_table_patients()
-    #     except:
-    #         QMessageBox().critical(self, 'Предупреждение', "Выберите операцию для удаления из таблицы",
-    #                                QMessageBox().Ok)
+
+    def fill_table_items_of_complex_material(self):  # заполняет виджет таблицы пациентами из бд
+        try:
+            lst = db.show_binded_complex_item(self.new_material_id)
+            if lst == []:
+                self.ui.tableWidget.setRowCount(0)
+            else:
+                for co, it in enumerate(lst):
+                    self.ui.tableWidget.setRowCount(co + 1)
+                    self.ui.tableWidget.setItem(co, 0, QTableWidgetItem("{}".format(it[0])))
+                    self.ui.tableWidget.setItem(co, 1, QTableWidgetItem("{}".format(it[1])))
+                    self.ui.tableWidget.setItem(co, 2, QTableWidgetItem("{}".format(it[2])))
+                    self.ui.tableWidget.setItem(co, 3, QTableWidgetItem("{}".format(it[3])))
+                    self.ui.tableWidget.setItem(co, 4, QTableWidgetItem("{}".format(it[4])))
+                    self.ui.tableWidget.setItem(co, 5, QTableWidgetItem("{}".format(it[5])))
+
+        except:
+            pass
+
+    def delete_position(self):
+        try:
+            self.selected_id_position = self.ui.tableWidget.item(self.ui.tableWidget.currentRow(), 5).text()
+            db.delete_item_in_new_complex_material_by_id(self.selected_id_position)
+            self.fill_table_items_of_complex_material()
+            aitcm.update_sum()
+
+            # pac.fill_table_operations_of_patient()
+            # pac.sum_of_operations()
+            # db.update_patient_sum(pac.sum_of_costs, mw.selected_patient_id)
+            # mw.fill_table_patients()
+        except:
+            QMessageBox().critical(self, 'Предупреждение', "Выберите операцию для удаления из таблицы",
+                                   QMessageBox().Ok)
 
 
 class mywindow(QtWidgets.QMainWindow):
@@ -379,7 +385,7 @@ class AddPositionToPatient(QDialog):
     def add_position_quantity_sum(self):
         info_to_add = {'sum_of': round(self.ui.doubleSpinBox_2.value() / self.ui.doubleSpinBox.value() * db.
                                        show_material_by_id(self.id_of_position)[2], 2),
-                       'quantity': self.ui.doubleSpinBox_2.value() / self.ui.doubleSpinBox.value(),
+                       'quantity': round(self.ui.doubleSpinBox_2.value() / self.ui.doubleSpinBox.value(), 2),
                        'id_materials': self.id_of_position,
                        'id_patients': mw.selected_patient_id}
         db.add_position_cost(info_to_add['id_patients'], info_to_add['id_materials'], info_to_add['quantity'],
@@ -394,12 +400,12 @@ class AddPositionToPatient(QDialog):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    extra = {
-
-        # Density Scale
-        'density_scale': '-1',
-    }
-    apply_stylesheet(app, theme='light_red.xml', invert_secondary=True, extra=extra)
+    # extra = {
+    #
+    #     # Density Scale
+    #     'density_scale': '-1',
+    # }
+    # apply_stylesheet(app, theme='light_red.xml', invert_secondary=True, extra=extra)
     ww = WaitingWindow()
     db = DataBase()
     mw = mywindow()

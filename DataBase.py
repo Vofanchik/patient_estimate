@@ -1,6 +1,8 @@
 import sqlite3
 
 # from ImportXlsx import XlsxImport, ODTExport
+from pprint import pprint
+
 from odf.opendocument import OpenDocumentText
 from odf.style import ParagraphProperties, Style, TableColumnProperties
 from odf.table import Table, TableColumn, TableRow, TableCell
@@ -154,10 +156,10 @@ class DataBase:
                          (id_materials, id_materials_new, quantity,))
         self.conn.commit()
 
-    def update_complex_material_sum(self, id_complex_material):
-        new_cost = self.cur.execute('''SELECT sum(quantity*price) FROM materials_complex
-                     left JOIN materials ON materials_complex.id_materials = materials.id
-                     WHERE id_materials_new = {}'''.format(id_complex_material)).fetchone()[0]
+    def update_complex_material_sum(self, new_cost, id_complex_material):
+        # new_cost = self.cur.execute('''SELECT sum(quantity*price) FROM materials_complex
+        #              left JOIN materials ON materials_complex.id_materials = materials.id
+        #              WHERE id_materials_new = {}'''.format(id_complex_material)).fetchone()[0]
         self.cur.execute("UPDATE materials SET price = {} where id = {}".format(new_cost, id_complex_material))
         self.conn.commit()
 
@@ -181,6 +183,16 @@ class DataBase:
     def show_material_by_id(self, id_material):
         return self.cur.execute('''SELECT * FROM materials where id = {}'''.format(id_material)).fetchone()
 
+    def show_binded_complex_item(self, id_complex_material):
+        return self.cur.execute('''SELECT name, unit, quantity, price, (quantity*price), materials_complex.id FROM materials_complex
+                                 LEFT JOIN materials ON materials_complex.id_materials = materials.id
+                                 where id_materials_new = {}'''.format(id_complex_material)).fetchall()
+
+    def show_sum_binded_complex_item(self, id_complex_material):
+        return self.cur.execute('''SELECT sum(quantity*price) FROM materials_complex
+                                 LEFT JOIN materials ON materials_complex.id_materials = materials.id
+                                 where id_materials_new = {}'''.format(id_complex_material)).fetchone()
+
     def delete_patient(self, id_patient: int):
         self.cur.execute('DELETE from patients where id = {}'.format(id_patient))
         self.conn.commit()
@@ -191,6 +203,10 @@ class DataBase:
 
     def delete_operations_by_id(self, _id: int):  # Удаление операции по ЕЁ id
         self.cur.execute('DELETE from operations where id = {}'.format(_id))
+        self.conn.commit()
+
+    def delete_item_in_new_complex_material_by_id(self, _id: int):  # Удаление операции по ЕЁ id
+        self.cur.execute('DELETE from materials_complex where id = {}'.format(_id))
         self.conn.commit()
 
     def show_operations_of_patient(self, id_patient):
@@ -224,7 +240,8 @@ class DataBase:
 
 if __name__ == "__main__":
     db = DataBase()
-    db.update_complex_material_sum(1570)
+    pprint(db.show_sum_binded_complex_item(1574)[0])
+    # db.update_complex_material_sum(1570)
     # data = db.show_quantity_of_materials()
     # pprint(data)
     # db.form_odt_for_sum_of(data)
