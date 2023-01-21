@@ -3,6 +3,7 @@ from PyQt5.QtCore import QTimer
 from PyQt5.QtWidgets import QApplication, QHBoxLayout, QFileDialog, QDialog, QTableWidgetItem, QMessageBox, QCompleter
 
 from PyQt5 import QtWidgets, QtCore
+from docxtpl import DocxTemplate
 
 from DataBase import DataBase
 from ImportXlsx import ODTExport
@@ -279,7 +280,7 @@ class PatientAllCosts(QDialog):
         self.ui.tableWidget.setColumnHidden(6, True)
         self.ui.pushButton.clicked.connect(self.open_add_position)
         self.ui.pushButton_2.clicked.connect(self.delete_position)
-        self.ui.pushButton_3.clicked.connect(self.export_to_odt)
+        self.ui.pushButton_3.clicked.connect(self.export_to_docx)
         try:
             self.fill_table_operations_of_patient(mw.selected_patient_id)
         except:
@@ -306,6 +307,10 @@ class PatientAllCosts(QDialog):
             if lst == []:
                 self.ui.tableWidget.setRowCount(0)
             else:
+                names_cat=['Расходник', 'Препарат', 'Дез', 'Прочее', 'Перевязка']
+                a=''
+
+
                 for co, it in enumerate(lst):
                     self.ui.tableWidget.setRowCount(co + 1)
                     self.ui.tableWidget.setItem(co, 0, QTableWidgetItem("{}".format(it[6])))
@@ -313,7 +318,17 @@ class PatientAllCosts(QDialog):
                     self.ui.tableWidget.setItem(co, 2, QTableWidgetItem("{}".format(it[3])))
                     self.ui.tableWidget.setItem(co, 3, QTableWidgetItem("{}".format(it[4])))
                     self.ui.tableWidget.setItem(co, 4, QTableWidgetItem("{}".format(it[7])))
-                    self.ui.tableWidget.setItem(co, 5, QTableWidgetItem("{}".format(it[9])))
+                    if it[9]==0:
+                        a=names_cat[0]
+                    elif it[9]==1:
+                        a=names_cat[1]
+                    elif it[9]==2:
+                        a=names_cat[2]
+                    elif it[9]==3:
+                        a=names_cat[3]
+                    elif it[9]==4:
+                        a=names_cat[4]
+                    self.ui.tableWidget.setItem(co, 5, QTableWidgetItem("{}".format(a)))
                     self.ui.tableWidget.setItem(co, 6, QTableWidgetItem("{}".format(it[0])))
         except:
             pass
@@ -348,6 +363,16 @@ class PatientAllCosts(QDialog):
         odt.form_odt(file_name=fname[0], **inf_to_fill)
         # ODTExport.form_odt(file_name=fname[0], **inf_to_fill)
         # pprint(inf_to_fill)
+
+    def export_to_docx(self):
+        context = db.show_all_information_by_id_patient_with_devide_by_category(mw.selected_patient_id)
+        fname = QFileDialog.getSaveFileName(self, 'Save file',
+                                            '', "MS Office Document text files (*.docx)")
+        # fname += '.docx' if '.docx' not in fname else True
+        tpl = DocxTemplate('Appendix_template.docx')
+        tpl.render(context)
+        tpl.save(fname[0])
+
 
 
 class AddPositionToPatient(QDialog):

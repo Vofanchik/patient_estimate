@@ -176,6 +176,11 @@
           <string>Иное</string>
          </property>
         </item>
+        <item>
+         <property name="text">
+          <string>Перевязка</string>
+         </property>
+        </item>
        </widget>
       </item>
       <item row="0" column="0" colspan="4">

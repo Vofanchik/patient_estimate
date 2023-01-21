@@ -91,6 +91,7 @@ class Ui_AddItem(object):
         self.comboBox.addItem("")
         self.comboBox.addItem("")
         self.comboBox.addItem("")
+        self.comboBox.addItem("")
         self.gridLayout.addWidget(self.comboBox, 7, 1, 1, 2)
 
         self.retranslateUi(AddItem)
@@ -109,6 +110,7 @@ class Ui_AddItem(object):
         self.comboBox.setItemText(1, _translate("AddItem", "Лекарственные препараты"))
         self.comboBox.setItemText(2, _translate("AddItem", "Дезинфицирующие средства"))
         self.comboBox.setItemText(3, _translate("AddItem", "Иное"))
+        self.comboBox.setItemText(4, _translate("AddItem", "Перевязка"))
 
 
 if __name__ == "__main__":

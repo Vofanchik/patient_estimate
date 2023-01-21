@@ -1,4 +1,6 @@
 from pprint import pprint
+
+from docxtpl import DocxTemplate
 from openpyxl import load_workbook
 
 import datetime
@@ -168,6 +170,11 @@ class ODTExport:
 
         textdoc.save('itog.odt')
 
+
+def export(context):
+    tpl = DocxTemplate('Appendix_template.docx')
+    tpl.render(context)
+    tpl.save('dynamic_table.docx')
 
 
 

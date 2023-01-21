@@ -178,6 +178,11 @@
        <string>Иное</string>
       </property>
      </item>
+     <item>
+      <property name="text">
+       <string>Перевязка</string>
+      </property>
+     </item>
     </widget>
    </item>
   </layout>

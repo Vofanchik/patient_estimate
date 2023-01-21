@@ -3,3 +3,4 @@ openpyxl==2.6.4
 odfpy==1.4.1
 python-docx==0.8.11
 qt-material
+docxtpl

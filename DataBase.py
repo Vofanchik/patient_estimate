@@ -1,12 +1,15 @@
 import sqlite3
 
 # from ImportXlsx import XlsxImport, ODTExport
+from datetime import datetime
 from pprint import pprint
 
+from docxtpl import DocxTemplate
 from odf.opendocument import OpenDocumentText
 from odf.style import ParagraphProperties, Style, TableColumnProperties
 from odf.table import Table, TableColumn, TableRow, TableCell
 from odf.text import P
+
 
 
 def form_odt_for_sum_of(data):
@@ -81,6 +84,7 @@ class DataBase:
            date_end_illness TEXT,
            cost real,
            status TEXT,
+           division TEXT,
             UNIQUE ("story") ON CONFLICT IGNORE)''')
         self.conn.commit()
 
@@ -156,21 +160,6 @@ class DataBase:
                          (id_materials, id_materials_new, quantity,))
         self.conn.commit()
 
-    def update_complex_material_sum(self, new_cost, id_complex_material):
-        # new_cost = self.cur.execute('''SELECT sum(quantity*price) FROM materials_complex
-        #              left JOIN materials ON materials_complex.id_materials = materials.id
-        #              WHERE id_materials_new = {}'''.format(id_complex_material)).fetchone()[0]
-        self.cur.execute("UPDATE materials SET price = {} where id = {}".format(new_cost, id_complex_material))
-        self.conn.commit()
-
-
-    # def import_from_xls(self, file_name):  # импортируем из экселя
-    #     p = XlsxImport()
-    #     data = p.import_into_list(file_name)
-    #     del p
-    #     for i in data:
-    #         self.add_items(i[0], i[4], i[1])
-
     def show_patients(self):
         return self.cur.execute('''SELECT * FROM patients''').fetchall()
 
@@ -193,6 +182,91 @@ class DataBase:
                                  LEFT JOIN materials ON materials_complex.id_materials = materials.id
                                  where id_materials_new = {}'''.format(id_complex_material)).fetchone()
 
+    def show_operations_of_patient(self, id_patient):
+        return self.cur.execute('''SELECT * FROM operations
+                                  LEFT JOIN materials ON operations.id_materials = materials.id
+                                  where id_patients = {}'''.format(id_patient)).fetchall()
+
+    def show_materials_by_quantity(self):
+        return self.cur.execute('''SELECT * FROM operations
+                                LEFT JOIN materials ON operations.id_materials = materials.id''').fetchall()
+
+    def show_all_information_by_id_patient_with_devide_by_category(self, id_patient):
+
+        pat_info = self.cur.execute('''SELECT * FROM patients                                         
+                                         where id = {}'''.format(id_patient)).fetchone()
+        patient_dict = {'id': pat_info[0], 'story': pat_info[1], 'fio': pat_info[2],
+                        'date_start_illness': datetime.strptime(pat_info[3], '%Y-%m-%d').strftime('%d.%m.%Y'),
+                        'date_end_illness': datetime.strptime(pat_info[4], '%Y-%m-%d').strftime('%d.%m.%Y'),
+                        'cost': pat_info[5], 'status': pat_info[6], 'division': pat_info[7],
+                        'cat0': self.cur.execute('''SELECT name, price, sum_of FROM operations 
+                                                    left join materials on operations.id_materials = materials.id                                       
+                                                     where id_patients = {} and
+                                                     category = 0'''.format(id_patient)).fetchall(),
+
+                        'cat0_sum': self.cur.execute('''SELECT sum(sum_of) FROM operations 
+                                                    left join materials on operations.id_materials = materials.id                                       
+                                                     where id_patients = {} and
+                                                     category = 0'''.format(id_patient)).fetchone()[0],
+
+                        'cat1': self.cur.execute('''SELECT name, price, sum_of FROM operations 
+                                                    left join materials on operations.id_materials = materials.id                                       
+                                                     where id_patients = {} and
+                                                     category = 1'''.format(id_patient)).fetchall(),
+
+                        'cat1_sum': self.cur.execute('''SELECT sum(sum_of) FROM operations 
+                                                    left join materials on operations.id_materials = materials.id                                       
+                                                     where id_patients = {} and
+                                                     category = 1'''.format(id_patient)).fetchone()[0],
+
+                        'cat2': self.cur.execute('''SELECT name, price, sum_of FROM operations 
+                                                    left join materials on operations.id_materials = materials.id                                       
+                                                     where id_patients = {} and
+                                                     category = 2'''.format(id_patient)).fetchall(),
+
+                        'cat2_sum': self.cur.execute('''SELECT sum(sum_of) FROM operations 
+                                                    left join materials on operations.id_materials = materials.id                                       
+                                                     where id_patients = {} and
+                                                     category = 2'''.format(id_patient)).fetchone()[0],
+
+                        'cat3': self.cur.execute('''SELECT name, price, sum_of FROM operations 
+                                                    left join materials on operations.id_materials = materials.id                                       
+                                                     where id_patients = {} and
+                                                     category = 3'''.format(id_patient)).fetchall(),
+
+                        'cat3_sum': self.cur.execute('''SELECT sum(sum_of) FROM operations 
+                                                    left join materials on operations.id_materials = materials.id                                       
+                                                     where id_patients = {} and
+                                                     category = 3'''.format(id_patient)).fetchone()[0],
+
+                        'cat4': self.cur.execute('''SELECT name, price, sum_of FROM operations 
+                                                    left join materials on operations.id_materials = materials.id                                       
+                                                     where id_patients = {} and
+                                                     category = 4'''.format(id_patient)).fetchall(),
+
+                        'cat4_sum': self.cur.execute('''SELECT sum(sum_of) FROM operations 
+                                                    left join materials on operations.id_materials = materials.id                                       
+                                                     where id_patients = {} and
+                                                     category = 4'''.format(id_patient)).fetchone()[0],
+
+                        }
+
+
+
+        return patient_dict
+
+
+    def show_quantity_of_materials(self):
+        id_of_founded_materials = set([a[0] for a in self.cur.execute('''SELECT id_materials FROM operations''')
+                                      .fetchall()])
+        _all = []
+        for items in id_of_founded_materials:
+            _all.append(self.cur.execute('''SELECT name, unit, sum(quantity), price, sum(sum_of)  FROM operations
+             LEFT JOIN materials ON operations.id_materials = materials.id
+             WHERE id_materials = {}'''.format(items)).fetchall())
+
+        return _all
+
     def delete_patient(self, id_patient: int):
         self.cur.execute('DELETE from patients where id = {}'.format(id_patient))
         self.conn.commit()
@@ -209,38 +283,30 @@ class DataBase:
         self.cur.execute('DELETE from materials_complex where id = {}'.format(_id))
         self.conn.commit()
 
-    def show_operations_of_patient(self, id_patient):
-        return self.cur.execute('''SELECT * FROM operations
-                                LEFT JOIN materials ON operations.id_materials = materials.id
-                                where id_patients = {}'''.format(id_patient)).fetchall()
-
     def update_patient_sum(self, cost, _id):
         self.cur.execute("UPDATE patients SET cost = {} where id = {}".format(cost, _id))
         self.conn.commit()
-
-    def show_materials_by_quantity(self):
-        return self.cur.execute('''SELECT * FROM operations
-                                LEFT JOIN materials ON operations.id_materials = materials.id''').fetchall()
-
-    def show_quantity_of_materials(self):
-        id_of_founded_materials = set([a[0] for a in self.cur.execute('''SELECT id_materials FROM operations''')
-                                      .fetchall()])
-        _all = []
-        for items in id_of_founded_materials:
-            _all.append(self.cur.execute('''SELECT name, unit, sum(quantity), price, sum(sum_of)  FROM operations
-             LEFT JOIN materials ON operations.id_materials = materials.id
-             WHERE id_materials = {}'''.format(items)).fetchall())
-
-        return _all
 
     def update_category_of_materials(self, id_material, new_category):
         self.cur.execute("UPDATE materials SET category = {} where id = {}".format(new_category, id_material))
         self.conn.commit()
         return new_category
 
+    def update_complex_material_sum(self, new_cost, id_complex_material):
+        # new_cost = self.cur.execute('''SELECT sum(quantity*price) FROM materials_complex
+        #              left JOIN materials ON materials_complex.id_materials = materials.id
+        #              WHERE id_materials_new = {}'''.format(id_complex_material)).fetchone()[0]
+        self.cur.execute("UPDATE materials SET price = {} where id = {}".format(new_cost, id_complex_material))
+        self.conn.commit()
+
+
 if __name__ == "__main__":
     db = DataBase()
-    pprint(db.show_sum_binded_complex_item(1574)[0])
+    # tpl = DocxTemplate('Appendix_template.docx')
+    # tpl.render(context)
+    # tpl.save('dynamic_table.docx')
+    # pprint(db.show_all_information_by_id_patient_with_devide_by_category(1))
+    # pprint(db.show_sum_binded_complex_item(1574)[0])
     # db.update_complex_material_sum(1570)
     # data = db.show_quantity_of_materials()
     # pprint(data)
