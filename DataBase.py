@@ -10,6 +10,7 @@ from odf.style import ParagraphProperties, Style, TableColumnProperties
 from odf.table import Table, TableColumn, TableRow, TableCell
 from odf.text import P
 
+from ImportXlsx import XlsxImport
 
 
 def form_odt_for_sum_of(data):
@@ -136,7 +137,7 @@ class DataBase:
         # cur.execute('''alter table materials add column category integer default 1''')
         # cur.execute('''alter table materials drop column category''')
 
-    def add_items(self, name, price, unit, category):  # создаем расходник
+    def add_items(self, name, price, unit, category=0):  # создаем расходник
         self.cur.execute("INSERT INTO materials(name, price, unit, category) VALUES(?,?,?,?)", (name, price, unit, category,))
         self.conn.commit()
 
@@ -298,6 +299,13 @@ class DataBase:
         #              WHERE id_materials_new = {}'''.format(id_complex_material)).fetchone()[0]
         self.cur.execute("UPDATE materials SET price = {} where id = {}".format(new_cost, id_complex_material))
         self.conn.commit()
+
+    def import_from_xls(self, file_name):  # импортируем из экселя
+        p = XlsxImport()
+        data = p.import_into_list(file_name)
+        del p
+        for i in data:
+            self.add_items(i[0], i[4], i[1])
 
 
 if __name__ == "__main__":

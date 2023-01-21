@@ -10,7 +10,7 @@ from odf.style import ParagraphProperties, Style, TableColumnProperties, TextPro
 from odf.table import Table, TableColumn, TableRow, TableCell
 from odf.text import P
 
-from DataBase import DataBase
+
 
 
 class XlsxImport:

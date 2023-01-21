@@ -1,3 +1,5 @@
+#!/usr/local/bin/python
+# -*- coding: utf-8 -*-
 import sys
 from PyQt5.QtCore import QTimer
 from PyQt5.QtWidgets import QApplication, QHBoxLayout, QFileDialog, QDialog, QTableWidgetItem, QMessageBox, QCompleter
@@ -15,7 +17,7 @@ from UI_files.PatientAll_costs import Ui_PatientAllCosts
 from UI_files.WaitingWindow import Ui_WaitingWidget
 from UI_files.AddComplexPosition import Ui_AddComplexMaterial
 from UI_files.AddItemtoComplexMaterial import Ui_AddItemToComplexMaterial
-from qt_material import apply_stylesheet
+#from qt_material import apply_stylesheet
 
 class AddItemToComplexMaterial(QDialog):
     def __init__(self, **kwargs):
