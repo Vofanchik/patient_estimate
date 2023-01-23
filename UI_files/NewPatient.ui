@@ -7,13 +7,253 @@
     <x>0</x>
     <y>0</y>
     <width>741</width>
-    <height>295</height>
+    <height>418</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Новый пациент</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
+   <item row="8" column="0">
+    <widget class="QLabel" name="label_5">
+     <property name="font">
+      <font>
+       <pointsize>14</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Поступил</string>
+     </property>
+    </widget>
+   </item>
+   <item row="8" column="1">
+    <widget class="QLabel" name="label_4">
+     <property name="font">
+      <font>
+       <pointsize>14</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Выписан</string>
+     </property>
+    </widget>
+   </item>
+   <item row="9" column="0">
+    <widget class="QDateEdit" name="dateEdit">
+     <property name="dateTime">
+      <datetime>
+       <hour>0</hour>
+       <minute>0</minute>
+       <second>0</second>
+       <year>2022</year>
+       <month>1</month>
+       <day>1</day>
+      </datetime>
+     </property>
+     <property name="displayFormat">
+      <string>yyyy-MM-dd</string>
+     </property>
+     <property name="calendarPopup">
+      <bool>true</bool>
+     </property>
+     <property name="currentSectionIndex">
+      <number>0</number>
+     </property>
+    </widget>
+   </item>
+   <item row="9" column="1">
+    <widget class="QDateEdit" name="dateEdit_2">
+     <property name="buttonSymbols">
+      <enum>QAbstractSpinBox::NoButtons</enum>
+     </property>
+     <property name="dateTime">
+      <datetime>
+       <hour>0</hour>
+       <minute>0</minute>
+       <second>0</second>
+       <year>2022</year>
+       <month>1</month>
+       <day>1</day>
+      </datetime>
+     </property>
+     <property name="displayFormat">
+      <string>yyyy-MM-dd</string>
+     </property>
+     <property name="calendarPopup">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="10" column="1">
+    <widget class="QPushButton" name="pushButton">
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Готово</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0" colspan="2">
+    <widget class="QLineEdit" name="lineEdit">
+     <property name="font">
+      <font>
+       <pointsize>14</pointsize>
+      </font>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="0" colspan="2">
+    <widget class="QLineEdit" name="lineEdit_2">
+     <property name="font">
+      <font>
+       <pointsize>14</pointsize>
+      </font>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="0" colspan="2">
+    <widget class="QComboBox" name="comboBox_2">
+     <property name="font">
+      <font>
+       <family>MS Shell Dlg 2</family>
+       <pointsize>14</pointsize>
+      </font>
+     </property>
+     <item>
+      <property name="text">
+       <string>Первое хирургическое</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Второе хирургическое</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Гнойной хирургии</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Травматологическое</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Нейрохирургии</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Урологическое</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Неврологическое</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Кардиологическое</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Дерматовенерологическое</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Анестезиологии и реанимации</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Гастроэнтерологическое </string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Пульмонологическое</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Гинекологическое</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Приемное</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Психиатрическое</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Операционное</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Физиотерапевтическое</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Инфекционное</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Функциональной диагностики</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Лучевой диагностики</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Клинико-дианостическое</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Неотложной помощи</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="7" column="0" colspan="2">
+    <widget class="QComboBox" name="comboBox">
+     <property name="font">
+      <font>
+       <family>MS Shell Dlg 2</family>
+       <pointsize>14</pointsize>
+      </font>
+     </property>
+     <item>
+      <property name="text">
+       <string>Раненый</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Больной</string>
+      </property>
+     </item>
+    </widget>
+   </item>
    <item row="0" column="0" colspan="2">
     <widget class="QLabel" name="label">
      <property name="font">
@@ -44,16 +284,22 @@
      </property>
     </widget>
    </item>
-   <item row="3" column="0" colspan="2">
-    <widget class="QLineEdit" name="lineEdit_2">
+   <item row="4" column="0" colspan="2">
+    <widget class="QLabel" name="label_6">
      <property name="font">
       <font>
        <pointsize>14</pointsize>
       </font>
      </property>
+     <property name="text">
+      <string>Отделение</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
     </widget>
    </item>
-   <item row="4" column="0" colspan="2">
+   <item row="6" column="0" colspan="2">
     <widget class="QLabel" name="label_3">
      <property name="font">
       <font>
@@ -65,117 +311,6 @@
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>
-     </property>
-    </widget>
-   </item>
-   <item row="8" column="1">
-    <widget class="QLabel" name="label_4">
-     <property name="font">
-      <font>
-       <pointsize>14</pointsize>
-      </font>
-     </property>
-     <property name="text">
-      <string>Выписан</string>
-     </property>
-    </widget>
-   </item>
-   <item row="5" column="0" colspan="2">
-    <widget class="QComboBox" name="comboBox">
-     <property name="font">
-      <font>
-       <family>MS Shell Dlg 2</family>
-       <pointsize>14</pointsize>
-      </font>
-     </property>
-     <item>
-      <property name="text">
-       <string>Раненый</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Больной</string>
-      </property>
-     </item>
-    </widget>
-   </item>
-   <item row="8" column="0">
-    <widget class="QLabel" name="label_5">
-     <property name="font">
-      <font>
-       <pointsize>14</pointsize>
-      </font>
-     </property>
-     <property name="text">
-      <string>Поступил</string>
-     </property>
-    </widget>
-   </item>
-   <item row="9" column="1">
-    <widget class="QDateEdit" name="dateEdit_2">
-     <property name="buttonSymbols">
-      <enum>QAbstractSpinBox::NoButtons</enum>
-     </property>
-     <property name="dateTime">
-      <datetime>
-       <hour>0</hour>
-       <minute>0</minute>
-       <second>0</second>
-       <year>2022</year>
-       <month>1</month>
-       <day>1</day>
-      </datetime>
-     </property>
-     <property name="displayFormat">
-      <string>yyyy-MM-dd</string>
-     </property>
-     <property name="calendarPopup">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="0" colspan="2">
-    <widget class="QLineEdit" name="lineEdit">
-     <property name="font">
-      <font>
-       <pointsize>14</pointsize>
-      </font>
-     </property>
-    </widget>
-   </item>
-   <item row="9" column="0">
-    <widget class="QDateEdit" name="dateEdit">
-     <property name="dateTime">
-      <datetime>
-       <hour>0</hour>
-       <minute>0</minute>
-       <second>0</second>
-       <year>2022</year>
-       <month>1</month>
-       <day>1</day>
-      </datetime>
-     </property>
-     <property name="displayFormat">
-      <string>yyyy-MM-dd</string>
-     </property>
-     <property name="calendarPopup">
-      <bool>true</bool>
-     </property>
-     <property name="currentSectionIndex">
-      <number>0</number>
-     </property>
-    </widget>
-   </item>
-   <item row="10" column="1">
-    <widget class="QPushButton" name="pushButton">
-     <property name="font">
-      <font>
-       <pointsize>12</pointsize>
-      </font>
-     </property>
-     <property name="text">
-      <string>Готово</string>
      </property>
     </widget>
    </item>

@@ -226,6 +226,7 @@ class mywindow(QtWidgets.QMainWindow):
                 self.ui.tableWidget.setItem(co, 4, QTableWidgetItem("{}".format(it[3])))
                 self.ui.tableWidget.setItem(co, 5, QTableWidgetItem("{}".format(it[4])))
                 self.ui.tableWidget.setItem(co, 6, QTableWidgetItem("{}".format(it[0])))
+                self.ui.tableWidget.setItem(co, 7, QTableWidgetItem("{}".format(it[7])))
 
 
 class WaitingWindow(QDialog):
@@ -266,10 +267,12 @@ class NewPatient(QDialog):
                         'date_start_illness': self.ui.dateEdit.text(),
                         'date_end_illness': self.ui.dateEdit_2.text(),
                         'cost': 0.0,
-                        'status': self.ui.comboBox.currentText()}
+                        'status': self.ui.comboBox.currentText(),
+                        'division': self.ui.comboBox_2.currentText()}
 
         db.add_patient(patient_info['story'], patient_info['fio'], patient_info['date_start_illness'],
-                       patient_info['date_end_illness'], patient_info['cost'], patient_info['status'])
+                       patient_info['date_end_illness'], patient_info['cost'], patient_info['status'],
+                       patient_info['division'])
         mw.fill_table_patients()
         self.hide()
 

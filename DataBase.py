@@ -143,10 +143,11 @@ class DataBase:
 
         return self.cur.lastrowid
 
-    def add_patient(self, story, fio, date_start_illness, date_end_illness, cost, status):  # создаем пациента
+    def add_patient(self, story, fio, date_start_illness, date_end_illness, cost, status, division):  # создаем пациента
         self.cur.execute(
-            "INSERT INTO patients(story, fio, date_start_illness, date_end_illness, cost, status) VALUES(?,?,?,?,?,?)",
-            (story, fio, date_start_illness, date_end_illness, cost, status,))
+            "INSERT INTO patients(story, fio, date_start_illness, date_end_illness, cost, status, division)"
+            " VALUES(?,?,?,?,?,?,?)",
+            (story, fio, date_start_illness, date_end_illness, cost, status, division))
         self.conn.commit()
         return self.cur.lastrowid
 
@@ -251,8 +252,11 @@ class DataBase:
                                                      category = 4'''.format(id_patient)).fetchone()[0],
 
                         }
+        dic = ['cat0_sum','cat1_sum', 'cat2_sum', 'cat3_sum', 'cat4_sum']
 
-
+        for i in dic:
+            if patient_dict[i] == None:
+                patient_dict[i] = 0
 
         return patient_dict
 
